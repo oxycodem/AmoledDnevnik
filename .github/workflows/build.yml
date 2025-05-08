@@ -1,44 +1,31 @@
-name: CI
+name: Build Tweak
 
 on:
-  workflow_dispatch:
   push:
-    paths:
-    - 'build.yml'
-    - '.github/workflows/build.yml'
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        cache: 
-        - true
-        - false
-        os:
-        - ubuntu-latest
-        - macos-latest
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        repository: Randomblock1/FleetsBGone
-        submodules: true
-        
-    - name: Prepare Theos
-      uses: beerpiss/theos-action@v1.7.0
-      with:
-        cache: ${{ matrix.cache }}
-        cache-dir-theos: ${{ github.workspace }}/theos
-        cache-dir-sdks: ${{ github.workspace }}/theos/sdks
-      
-    - name: Build package
-      run: |
-        rm -f packages/*
-        make package FINALPACKAGE=1
- 
-    - name: Upload package
-      uses: actions/upload-artifact@v4
-      with:
-        name: 'Package'
-        path: ${{ github.workspace }}/packages/*.deb
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install Theos dependencies
+        run: |
+          brew install ldid dpkg make perl
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+
+      - name: Build .deb package
+        run: |
+          make clean package FINALPACKAGE=1
+
+      - name: Upload .deb to GitHub Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: AmoledDnevnik.deb
+          path: ./packages/*.deb
