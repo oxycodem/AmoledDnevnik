@@ -1,0 +1,9 @@
+Package: com.lain.amoleddnevink
+Name: AmoledDnevnik
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Amoled theme for Dnevnik
+Maintainer: Platon
+Author: Platon
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)
