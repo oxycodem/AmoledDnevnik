@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+    - 'build.yml'
+    - '.github/workflows/build.yml'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        cache: 
+        - true
+        - false
+        os:
+        - ubuntu-latest
+        - macos-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: Randomblock1/FleetsBGone
+        submodules: true
+        
+    - name: Prepare Theos
+      uses: beerpiss/theos-action@v1.7.0
+      with:
+        cache: ${{ matrix.cache }}
+        cache-dir-theos: ${{ github.workspace }}/theos
+        cache-dir-sdks: ${{ github.workspace }}/theos/sdks
+      
+    - name: Build package
+      run: |
+        rm -f packages/*
+        make package FINALPACKAGE=1
+ 
+    - name: Upload package
+      uses: actions/upload-artifact@v3
+      with:
+        name: 'Package'
+        path: ${{ github.workspace }}/packages/*.deb
