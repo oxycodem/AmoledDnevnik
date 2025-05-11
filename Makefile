@@ -6,7 +6,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = AmoledDnevnik
 
-AmoledDnevnik_FILES = Tweak.x
+AmoledDnevnik_FILES = Tweak.x AmoledDnevnikSettingsVC.m
 AmoledDnevnik_CFLAGS = -fobjc-arc -multiply_defined
 
 include $(THEOS_MAKE_PATH)/tweak.mk
