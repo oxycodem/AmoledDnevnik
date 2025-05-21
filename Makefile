@@ -1,5 +1,7 @@
 TARGET := iphone:clang:latest:14.0
 INSTALL_TARGET_PROCESSES = ru.mes.dnevnik.fgis
+THEOS_PACKAGE_SCHEME = rootless
+ARCHS := arm64
 
 
 include $(THEOS)/makefiles/common.mk
